@@ -1,0 +1,43 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        cargo-args:
+          - ""
+          - "--no-default-features"
+        rust-version:
+          - "1.85.1"
+          - "stable"
+
+    steps:
+      - uses: actions/checkout@v6
+      - name: Setup Rust ${{ matrix.rust-version }}
+        uses: dtolnay/rust-toolchain@master
+        id: setup-rust
+        with:
+          toolchain: ${{ matrix.rust-version }}
+      - name: Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-${{ steps.setup-rust.outputs.cachekey }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Build
+        run: cargo build --verbose ${{ matrix.cargo-args }}
+      - name: Test
+        run: cargo test --verbose ${{ matrix.cargo-args }}
