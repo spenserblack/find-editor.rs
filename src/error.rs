@@ -1,8 +1,6 @@
 //! Module for this crate's error type.
-use super::{ParseError, WhichError};
 use std::error::Error as ErrorTrait;
 use std::fmt::{self, Display};
-use std::io;
 
 /// Possible error type returned by 3rd-party tools.
 #[non_exhaustive]
@@ -10,15 +8,15 @@ use std::io;
 pub enum Error {
     /// A command failed to start.
     #[cfg(feature = "open")]
-    Io(io::Error),
+    Io(std::io::Error),
     /// An error returned when failing to split shell words using
     /// [`shell-words`](https://crates.io/crates/shell-words).
     #[cfg(feature = "split")]
-    ShellWords(ParseError),
+    ShellWords(super::ParseError),
     /// An error returned when failing to find a command with
     /// [`which`](https://crates.io/crates/which).
     #[cfg(feature = "which")]
-    Which(WhichError),
+    Which(super::WhichError),
 }
 
 impl Display for Error {
