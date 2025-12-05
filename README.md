@@ -1,5 +1,7 @@
 # find-editor.rs
 
+[![Crates.io Version](https://img.shields.io/crates/v/find-editor)](https://crates.io/crates/find-editor)
+
 Finds and opens an editor to edit a file. Useful if you want to make it easy for your
 users to edit config files.
 
