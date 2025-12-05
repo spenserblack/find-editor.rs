@@ -29,7 +29,7 @@ impl Finder {
         args.push(file.into());
         let mut child = Command::new(editor).args(args).spawn().map_err(Error::Io)?;
         if wait {
-            child.wait().expect("command should be running");
+            child.wait().map_err(Error::Io)?;
         }
         Ok(())
     }
